@@ -13,7 +13,7 @@ SSO credentials automatically refresh, making them perfect for Terraform.
 First, check if your credentials are temporary:
 
 ```bash
-grep -A 3 "770341584863_account-admin" ~/.aws/credentials
+grep -A 3 "your-profile-name" ~/.aws/credentials
 ```
 
 If you see `aws_session_token`, they're temporary.
@@ -25,15 +25,15 @@ aws configure sso
 ```
 
 Answer the prompts:
-- **SSO session name**: `dd-sso` (or any name you prefer)
+- **SSO session name**: `my-sso` (or any name you prefer)
 - **SSO start URL**: Your organization's portal (e.g., `https://d-xxxxxxxxx.awsapps.com/start`)
 - **SSO Region**: Where your SSO is configured (e.g., `us-east-1`)
 - **SSO registration scopes**: Press Enter for default
-- **Account**: Select your account (770341584863)
-- **Role**: Select `account-admin` or similar
+- **Account**: Select your AWS account from the list
+- **Role**: Select your role (e.g., `account-admin`)
 - **CLI default region**: `us-west-2`
 - **CLI default output format**: `json`
-- **Profile name**: `dd-admin` (or keep `770341584863_account-admin`)
+- **Profile name**: `my-profile` (or any name you prefer)
 
 ### 3. Verify SSO Configuration
 
@@ -42,23 +42,23 @@ Answer the prompts:
 cat ~/.aws/config
 
 # Login to SSO
-aws sso login --profile dd-admin
+aws sso login --profile my-profile
 
 # Test it works
-aws sts get-caller-identity --profile dd-admin
+aws sts get-caller-identity --profile my-profile
 ```
 
 ### 4. Update terraform.tfvars
 
 ```hcl
-aws_profile = "dd-admin"  # Use your SSO profile name
+aws_profile = "my-profile"  # Use your SSO profile name
 ```
 
 ### 5. Workflow Going Forward
 
 ```bash
 # Before running Terraform
-aws sso login --profile dd-admin
+aws sso login --profile my-profile
 
 # Then run Terraform (credentials will auto-refresh)
 terraform plan
@@ -80,13 +80,13 @@ aws_session_token = ...  # This expires!
 
 ### SSO (Recommended - ~/.aws/config)
 ```ini
-[profile dd-admin]
-sso_session = dd-sso
-sso_account_id = 770341584863
-sso_role_name = account-admin
+[profile my-profile]
+sso_session = my-sso
+sso_account_id = aws_account
+sso_role_name = your-role-name
 region = us-west-2
 
-[sso-session dd-sso]
+[sso-session my-sso]
 sso_start_url = https://your-org.awsapps.com/start
 sso_region = us-east-1
 sso_registration_scopes = sso:account:access
@@ -100,14 +100,14 @@ sso_registration_scopes = sso:account:access
 ### "Session has expired"
 
 ```bash
-aws sso login --profile dd-admin
+aws sso login --profile my-profile
 ```
 
 ### "Profile not found"
 
 Check that the profile exists:
 ```bash
-cat ~/.aws/config | grep -A 5 "profile dd-admin"
+cat ~/.aws/config | grep -A 5 "profile my-profile"
 ```
 
 ### Still using temporary credentials?
