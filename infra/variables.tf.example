@@ -1,0 +1,70 @@
+variable "region" {
+  description = "AWS region"
+  type        = string
+  default     = "us-west-2"
+}
+
+variable "aws_profile" {
+  description = "AWS CLI profile name (for SSO authentication)"
+  type        = string
+  default     = "default"
+}
+
+variable "cluster_name" {
+  description = "EKS cluster name"
+  type        = string
+  default     = "test-env-eks"
+}
+
+variable "kubernetes_version" {
+  description = "EKS version (check AWS-supported versions)"
+  type        = string
+  default     = "1.30"
+}
+
+variable "vpc_cidr" {
+  description = "CIDR for the VPC"
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
+variable "az_count" {
+  description = "Number of AZs/subnets"
+  type        = number
+  default     = 3
+}
+
+variable "node_instance_types" {
+  description = "Node instance types for the managed node group"
+  type        = list(string)
+  default     = ["t4g.medium"]
+}
+
+variable "ng_desired_size" {
+  description = "Desired node count"
+  type        = number
+  default     = 3
+}
+
+variable "ng_min_size" {
+  description = "Min node count"
+  type        = number
+  default     = 3
+}
+
+variable "ng_max_size" {
+  description = "Max node count"
+  type        = number
+  default     = 5
+}
+
+variable "tags" {
+  description = "Common tags"
+  type        = map(string)
+  default = {
+    project = "customer-scenario-test"
+    creator = "you"
+    team    = "your-team"
+  }
+}
+

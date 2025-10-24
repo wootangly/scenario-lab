@@ -1,0 +1,11 @@
+region             = "us-west-2"
+aws_profile        = "default"  # Change to your SSO profile name
+cluster_name       = "test-env-eks"
+kubernetes_version = "1.30"
+
+# If you want different instances or scaling:
+# node_instance_types = ["t3.large"]
+# ng_desired_size     = 3
+# ng_min_size         = 3
+# ng_max_size         = 5
+
