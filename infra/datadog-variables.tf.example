@@ -1,0 +1,29 @@
+# Datadog Variables for Terraform
+# Copy this to a secure location or use environment variables
+
+variable "datadog_api_key" {
+  description = "Datadog API Key"
+  type        = string
+  sensitive   = true
+  default     = ""  # Set via TF_VAR_datadog_api_key env var
+}
+
+variable "datadog_app_key" {
+  description = "Datadog Application Key (optional)"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "datadog_site" {
+  description = "Datadog site (datadoghq.com, us3.datadoghq.com, datadoghq.eu, etc.)"
+  type        = string
+  default     = "datadoghq.com"
+}
+
+variable "datadog_enabled" {
+  description = "Enable Datadog deployment via Terraform"
+  type        = bool
+  default     = false  # Set to true to enable
+}
+

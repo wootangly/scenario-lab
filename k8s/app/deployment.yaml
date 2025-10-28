@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: football-viewer
+  namespace: scenario-lab
+  labels:
+    app: football-viewer
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: football-viewer
+  template:
+    metadata:
+      labels:
+        app: football-viewer
+        tier: frontend
+    spec:
+      containers:
+      - name: football-viewer
+        image: 770341584863.dkr.ecr.us-west-2.amazonaws.com/football-viewer:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+          name: http
+          protocol: TCP
+        env:
+        - name: NCAA_API_URL
+          value: "http://ncaa-api:3000"
+        - name: NCAA_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ncaa-api-secret
+              key: api-key
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      # Run on ARM nodes (matching your t4g.medium instances)
+      nodeSelector:
+        kubernetes.io/arch: arm64
+

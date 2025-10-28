@@ -158,7 +158,7 @@ After successful deployment, Terraform will output:
 This configuration uses **t4g.medium** instances, which are ARM-based AWS Graviton2 processors.
 
 ### Benefits of ARM (Graviton):
-- ✅ Better price/performance ratio (~20% cost savings)
+- ✅ Better price/performance ratio
 - ✅ Better energy efficiency
 - ✅ Compatible with most containerized workloads
 
@@ -263,26 +263,6 @@ terraform destroy
 
 Ensure you've backed up any important data before destroying!
 
-## Files
-
-### Committed to Git
-- `eks.tf` - EKS cluster and node group configuration
-- `vpc.tf` - VPC, subnets, NAT gateway configuration
-- `providers.tf` - AWS, Kubernetes, and Helm provider configuration
-- `variables.tf.example` - Example variable definitions
-- `terraform.tfvars.example` - Example variable values
-- `outputs.tf` - Output definitions
-- `versions.tf` - Terraform and provider version constraints
-- `README.md` - This file
-- `SSO_SETUP.md` - Detailed SSO setup guide
-
-### Ignored by Git (`.gitignore`)
-- `variables.tf` - Your actual variable definitions with personal tags
-- `terraform.tfvars` - Your actual configuration with profile name
-- `terraform.tfstate*` - Terraform state files
-- `.terraform/` - Terraform plugins and modules
-- `.terraform.lock.hcl` - Provider version lock file
-
 ## Security Notes
 
 - **No Credentials in Code**: `variables.tf` and `terraform.tfvars` are gitignored to prevent accidental credential exposure
@@ -291,31 +271,6 @@ Ensure you've backed up any important data before destroying!
 - **IRSA Enabled**: IAM Roles for Service Accounts enabled for pod-level permissions
 - **Encryption**: Secrets encrypted at rest using AWS KMS
 - **Network Security**: Private subnets for nodes, security groups with least privilege
-
-## Cost Estimation
-
-Approximate monthly costs (us-west-2 region, 24/7 usage):
-
-| Resource | Cost |
-|----------|------|
-| EKS Control Plane | ~$73/month |
-| 3x t4g.medium nodes (ARM) | ~$75/month |
-| NAT Gateway | ~$33/month |
-| EBS volumes (60GB total) | ~$6/month |
-| Data transfer | ~$5-10/month |
-| **Total** | **~$190-200/month** |
-
-### Cost Optimization Tips:
-
-**Development/Testing:**
-- Use `t4g.small` or `t4g.micro` instead of `t4g.medium`
-- Reduce node count to 1
-- Destroy when not in use
-
-**Production:**
-- Use Spot instances for non-critical workloads
-- Enable cluster autoscaler to scale down during off-hours
-- Use AWS Savings Plans for long-term commitments
 
 ## SSO vs IAM User Credentials
 
@@ -380,18 +335,3 @@ If you need to move the cluster to a different AWS account:
    terraform apply
    ```
 
-## Additional Resources
-
-- [AWS SSO Configuration Guide](SSO_SETUP.md) - Detailed SSO setup instructions
-- [EKS Best Practices](https://aws.github.io/aws-eks-best-practices/) - AWS official guide
-- [Terraform AWS EKS Module](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest) - Module documentation
-- [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/) - Kubernetes commands
-- [AWS Graviton](https://aws.amazon.com/ec2/graviton/) - ARM processor information
-
-## Support
-
-For issues or questions:
-1. Check the Troubleshooting section above
-2. Review [SSO_SETUP.md](SSO_SETUP.md) for authentication issues
-3. Consult the [EKS module documentation](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest)
-4. Check AWS service health dashboard for regional issues

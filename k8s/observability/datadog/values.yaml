@@ -1,0 +1,151 @@
+# Datadog Helm Chart Values for EKS
+# Docs: https://github.com/DataDog/helm-charts/tree/main/charts/datadog
+
+## Datadog Agent Configuration
+
+datadog:
+  # API Key - REQUIRED: Set via environment variable or Terraform
+  # Get from: https://app.datadoghq.com/organization-settings/api-keys
+  apiKey: ""  # Set via --set datadog.apiKey or use apiKeyExistingSecret
+  
+  # Datadog Site (use your region)
+  # US1: datadoghq.com (default)
+  # US3: us3.datadoghq.com
+  # US5: us5.datadoghq.com
+  # EU1: datadoghq.eu
+  site: datadoghq.com
+  
+  # Cluster name - matches your EKS cluster
+  clusterName: cwoo-test-env-eks
+  
+  # Tags for all metrics
+  tags:
+    - "env:prod"
+    - "project:scenario-lab"
+    - "team:sales.engineering.west"
+    - "creator:collin.woo"
+  
+  # Enable Log Collection
+  logs:
+    enabled: true
+    containerCollectAll: true
+    containerCollectUsingFiles: true
+  
+  # Enable APM (Application Performance Monitoring)
+  apm:
+    portEnabled: true
+    socketEnabled: true
+  
+  # Enable Process Monitoring
+  processAgent:
+    enabled: true
+    processCollection: true
+  
+  # Enable Network Performance Monitoring
+  networkMonitoring:
+    enabled: true
+  
+  # Enable Kubernetes State Metrics
+  kubeStateMetricsEnabled: true
+  
+  # Enable Orchestrator Explorer
+  orchestratorExplorer:
+    enabled: true
+  
+  # Container Images (use public ECR for better performance in AWS)
+  registry: public.ecr.aws/datadog
+  
+  # Kubelet TLS verification
+  kubelet:
+    tlsVerify: false
+
+## Cluster Agent Configuration
+clusterAgent:
+  enabled: true
+  replicas: 2  # High availability
+  
+  # Cluster Agent resources
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  
+  # Enable Admission Controller for APM auto-instrumentation
+  admissionController:
+    enabled: true
+    mutateUnlabelled: false  # Only mutate pods with specific labels
+  
+  # Metrics Provider for autoscaling
+  metricsProvider:
+    enabled: true
+    useDatadogMetrics: true
+
+## Node Agent Configuration
+agents:
+  # Node agent resources
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  
+  # Use host network for better network monitoring
+  useHostNetwork: true
+  
+  # Tolerations to run on all nodes
+  tolerations:
+    - operator: Exists
+
+## Kube State Metrics
+datadog-crds:
+  crds:
+    datadogMetrics: true
+
+## External Metrics Server (for HPA with Datadog metrics)
+clusterChecksRunner:
+  enabled: true
+  replicas: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+## Service Account
+serviceAccount:
+  create: true
+  name: datadog-agent
+
+## RBAC
+rbac:
+  create: true
+
+## Kube State Metrics (use existing or deploy)
+kubeStateMetricsCore:
+  enabled: true
+  rbac:
+    create: true
+  serviceAccount:
+    create: true
+
+## Additional Configurations
+
+# Enable security agent (for compliance monitoring)
+securityAgent:
+  compliance:
+    enabled: false  # Enable if you want CIS benchmarks
+  runtime:
+    enabled: false  # Enable for runtime security
+
+# Prometheus metrics scraping
+prometheusScrape:
+  enabled: true
+  serviceEndpoints: true
+

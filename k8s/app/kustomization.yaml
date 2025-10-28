@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: scenario-lab
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  # Uncomment to use Ingress (requires AWS Load Balancer Controller)
+  # - ingress.yaml
+
+commonLabels:
+  project: scenario-lab
+  component: football-viewer
+

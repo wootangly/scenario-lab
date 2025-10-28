@@ -1,0 +1,69 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Terraform
+**/.terraform/
+**/.terraform.lock.hcl
+**/terraform.tfstate
+**/terraform.tfstate.backup
+**/terraform.tfvars
+**/tfplan
+**/variables.tf
+**/.terraform.tfstate.lock.info
+
+# Terraform examples are OK to commit
+!**/terraform.tfvars.example
+!**/variables.tf.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Secrets and credentials
+*.pem
+*.key
+*.crt
+.env
+.env.local
+secrets/
+
+# Datadog secrets
+**/values-secrets.yaml
+**/datadog-variables.tf
+**/datadog-api-key.txt
+
+# Logs
+*.log
+logs/
+
+# Docker
+.dockerignore.bak
+
+# Kubernetes
+**/kubeconfig
+**/kube-config
+
+# OS
+Thumbs.db
+.DS_Store
+

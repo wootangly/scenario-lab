@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ncaa-api
+  namespace: scenario-lab
+  labels:
+    app: ncaa-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ncaa-api
+  template:
+    metadata:
+      labels:
+        app: ncaa-api
+    spec:
+      containers:
+      - name: ncaa-api
+        image: henrygd/ncaa-api:latest
+        ports:
+        - containerPort: 3000
+          name: http
+        env:
+        - name: NCAA_HEADER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ncaa-api-secret
+              key: api-key
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
